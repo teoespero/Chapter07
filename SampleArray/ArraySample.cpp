@@ -8,14 +8,112 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
+void getdata(string &fname, double &grade){
+	cout << "name.....";
+	do {
+		getline(cin, fname);
+	} while (fname.length() == 0);
 
+	cout << "grade.....";
+	do {
+		cin >> grade;
+	} while (grade < 1);
+}
+
+void writetofile(ofstream &outfile, string fname, double grade) {
+	outfile << fname << "," << grade << endl;
+}
+
+void keepgoing(char &keepentering) {
+	do {
+		cin >> keepentering;
+	} while (!(keepentering == 'y' || keepentering == 'n'));
+}
+
+bool runagain(char keepentering) {
+	if (keepentering != 'y') {
+		return false;
+	}
+}
+
+void readdata(ifstream &infile, string &studentrec) {
+	string
+		name1[5],
+		name2[5],
+		fname,
+		tempstring;
+	int 		
+		grades[5],
+		ctr = 0;
+
+	while (getline(infile, studentrec)) {
+		stringstream ss(studentrec);
+		getline(ss, fname, ',');
+		getline(ss, tempstring, ',');
+		name1[ctr] = fname;
+		grades[ctr] = stoi(tempstring);
+		ctr++;
+	}
+
+	cout << "Fullname" << "\t\t" << "Grade" << endl;
+	cout << "----------------------------------------------------------" << endl;
+	for (int ptr = 0; ptr < ctr; ptr++)
+		cout << name1[ptr] << "\t\t" << grades[ptr] << endl;
+}
 
 int main() {
-	int myarray[] = { 1,2,3,4,5,6,7,8,9,0 };
+	ifstream infile;
+	ofstream outfile;
 
-	for (int ctr : myarray)
-		cout << ctr << endl;
+	int ctr = 0; 
+
+	string
+		studentrec = "",
+		fname = "";
+
+	double
+		grade = 0.00;
+
+	bool again = true;
+	char keepentering = 'y';
+
+	outfile.open("mydata.txt");
+	if (outfile.fail()) {
+		cout << "\t*****File i/o error." << endl;
+		exit(1);
+	}
+	else {
+		do {
+			do {
+				
+				getdata(fname, grade);
+				writetofile(outfile, fname, grade);
+				cout << "enter another [y/n]?.....";
+				keepgoing(keepentering);
+			} while (keepentering == 'y');
+			again = runagain(keepentering);
+		} while (again);
+
+		cout << endl;
+		grade = 0.00;
+		fname = "";
+		outfile.close();
+	}
+
+	infile.open("mydata.txt");
+	if (infile.fail()) {
+		cout << "\t*****File i/o error." << endl;
+		exit(1);
+	}
+	else {
+		readdata(infile, studentrec);
+	}
+
+	infile.close();
+
+
 }
