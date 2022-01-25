@@ -40,6 +40,13 @@ bool runagain(char keepentering) {
 	}
 }
 
+void printdata(string name1[], double grades[], int ctr) {
+	cout << "Fullname" << "\t\t" << "Grade" << endl;
+	cout << "-------------------------------------" << endl;
+	for (int ptr = 0; ptr < ctr; ptr++)
+		cout << name1[ptr] << "\t\t" << grades[ptr] << endl;
+}
+
 void readdata(ifstream &infile, string &studentrec) {
 	string
 		name1[5],
@@ -47,23 +54,23 @@ void readdata(ifstream &infile, string &studentrec) {
 		fname,
 		tempstring;
 	int 		
-		grades[5],
 		ctr = 0;
+
+	double
+		grades[5];
 
 	while (getline(infile, studentrec)) {
 		stringstream ss(studentrec);
 		getline(ss, fname, ',');
 		getline(ss, tempstring, ',');
 		name1[ctr] = fname;
-		grades[ctr] = stoi(tempstring);
+		grades[ctr] = stod(tempstring);
 		ctr++;
 	}
 
-	cout << "Fullname" << "\t\t" << "Grade" << endl;
-	cout << "----------------------------------------------------------" << endl;
-	for (int ptr = 0; ptr < ctr; ptr++)
-		cout << name1[ptr] << "\t\t" << grades[ptr] << endl;
+	printdata(name1, grades, ctr);
 }
+
 
 int main() {
 	ifstream infile;
